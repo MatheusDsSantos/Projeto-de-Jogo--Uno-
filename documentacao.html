@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentação - Jogo UNO em Python</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  .capa {
+    background: linear-gradient(135deg, #e63946 0%, #c1121f 50%, #6a0572 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    page-break-after: always;
+  }
+
+  .capa-icon { font-size: 100px; margin-bottom: 30px; }
+  .capa h1 { font-size: 52px; font-weight: 700; margin-bottom: 10px; letter-spacing: -1px; }
+  .capa h2 { font-size: 24px; font-weight: 300; opacity: 0.9; margin-bottom: 40px; }
+  .capa-linha { width: 80px; height: 4px; background: rgba(255,255,255,0.5); margin: 30px auto; border-radius: 2px; }
+  .capa-info { font-size: 16px; opacity: 0.85; line-height: 2; }
+  .capa-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin: 6px 4px;
+  }
+  .capa-badges { margin-top: 30px; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* SUMÁRIO */
+  .sumario {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 50px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    page-break-after: always;
+  }
+
+  .sumario h2 { font-size: 26px; color: #e63946; margin-bottom: 25px; }
+
+  .sumario-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e0e0e0;
+    font-size: 14px;
+  }
+
+  .sumario-item:last-child { border-bottom: none; }
+  .sumario-num { color: #e63946; font-weight: 600; font-size: 13px; margin-right: 10px; }
+  .sumario-titulo { flex: 1; }
+  .sumario-sub { padding-left: 24px; color: #666; font-size: 13px; }
+
+  /* SEÇÕES */
+  .secao {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .secao-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #e63946;
+  }
+
+  .secao-num {
+    background: #e63946;
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .secao-titulo { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+
+  h3 {
+    font-size: 19px;
+    color: #c1121f;
+    margin: 30px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h3::before { content: "▸"; color: #e63946; }
+
+  h4 {
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    margin: 20px 0 8px;
+  }
+
+  p { margin-bottom: 14px; color: #333; }
+
+  /* CÓDIGO */
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 10px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    margin: 16px 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    border-left: 4px solid #e63946;
+  }
+
+  code {
+    font-family: 'Fira Code', monospace;
+    background: #f0e6ff;
+    color: #6a0572;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+  }
+
+  /* SYNTAX HIGHLIGHT MANUAL */
+  .kw { color: #cba6f7; font-weight: 500; }  /* keywords */
+  .fn { color: #89b4fa; }                     /* functions */
+  .st { color: #a6e3a1; }                     /* strings */
+  .cm { color: #6c7086; font-style: italic; } /* comments */
+  .nm { color: #fab387; }                     /* numbers */
+  .cl { color: #f38ba8; }                     /* class names */
+  .sf { color: #89dceb; }                     /* self */
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  .card {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 18px;
+  }
+
+  .card-titulo { font-weight: 600; color: #c1121f; margin-bottom: 6px; font-size: 14px; }
+  .card p { font-size: 13.5px; color: #444; margin: 0; }
+
+  /* ALERT BOXES */
+  .box {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-left: 5px solid;
+  }
+
+  .box-info { background: #e8f4fd; border-color: #2196f3; }
+  .box-dica { background: #e8f5e9; border-color: #4caf50; }
+  .box-atencao { background: #fff8e1; border-color: #ff9800; }
+
+  .box-titulo { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .box-info .box-titulo { color: #1565c0; }
+  .box-dica .box-titulo { color: #2e7d32; }
+  .box-atencao .box-titulo { color: #e65100; }
+  .box p { margin: 0; font-size: 14px; }
+
+  /* TABELAS */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+
+  th {
+    background: #e63946;
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td { padding: 11px 16px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) { background: #f9f9f9; }
+
+  /* DIAGRAMA */
+  .diagrama {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    padding: 24px;
+    border-radius: 10px;
+    margin: 16px 0;
+    line-height: 1.9;
+    white-space: pre;
+  }
+
+  /* FLUXO */
+  .fluxo {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 16px 0;
+  }
+
+  .fluxo-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .fluxo-esq {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .fluxo-circulo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e63946;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .fluxo-linha {
+    width: 2px;
+    flex: 1;
+    background: #e0e0e0;
+    min-height: 20px;
+  }
+
+  .fluxo-conteudo {
+    padding: 4px 0 24px;
+    flex: 1;
+  }
+
+  .fluxo-conteudo strong { display: block; margin-bottom: 4px; color: #1a1a2e; }
+  .fluxo-conteudo p { font-size: 13.5px; color: #555; margin: 0; }
+
+  /* PRINT */
+  @media print {
+    body { background: white; }
+    .secao, .sumario { box-shadow: none; page-break-inside: avoid; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+  }
+
+  .tag {
+    display: inline-block;
+    background: #fff0f0;
+    color: #c1121f;
+    border: 1px solid #ffcdd2;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 2px;
+  }
+
+  ul, ol { padding-left: 24px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; color: #333; }
+
+  .destaque {
+    background: linear-gradient(135deg, #fff5f5, #fff0f0);
+    border: 1px solid #ffcdd2;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="capa">
+  <div class="capa-icon">🃏</div>
+  <h1>Jogo UNO</h1>
+  <h2>Documentação Técnica Completa</h2>
+  <div class="capa-linha"></div>
+  <p style="font-size:18px; opacity:0.9; max-width:500px; line-height:1.6">
+    Implementação do jogo UNO utilizando quatro estruturas de dados clássicas da Ciência da Computação
+  </p>
+  <div class="capa-badges">
+    <span class="capa-badge">🐍 Python 3</span>
+    <span class="capa-badge">📚 Pilha (Stack)</span>
+    <span class="capa-badge">🔄 Fila (Queue)</span>
+    <span class="capa-badge">🔗 Lista Encadeada</span>
+    <span class="capa-badge">🌳 Árvore Binária de Busca</span>
+    <span class="capa-badge">🌐 Interface Web</span>
+  </div>
+  <div style="margin-top:50px; opacity:0.75; font-size:14px;">
+    <p>Estruturas de Dados e Algoritmos</p>
+    <p style="margin-top:6px">2026</p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SUMÁRIO -->
+<div class="sumario">
+  <h2>📋 Sumário</h2>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">1.</span><span class="sumario-titulo">Visão Geral do Projeto</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>O que é o projeto · Objetivo · Tecnologias usadas</span>
+  </div>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">2.</span><span class="sumario-titulo">Fundamentos de Python Usados no Código</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>Importações · Variáveis · Listas · for/while · f-strings · random</span>
+  </div>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">3.</span><span class="sumario-titulo">Orientação a Objetos (Classes)</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>O que é uma classe · self · __init__ · Métodos · Encadeamento de atributos</span>
+  </div>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">4.</span><span class="sumario-titulo">Estruturas de Dados em Profundidade</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>Pilha · Fila · Lista Encadeada · Árvore Binária de Busca · Comparação entre elas</span>
+  </div>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">5.</span><span class="sumario-titulo">As Classes da Pasta estruturas/ Explicadas Linha a Linha</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>No · ListaEncadeada · Pilha · Fila · NoArvore · ArvoreBinariaBusca</span>
+  </div>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">6.</span><span class="sumario-titulo">Fluxo Completo do Jogo</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>Do início ao fim · Passo a passo · Efeitos das cartas especiais</span>
+  </div>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">7.</span><span class="sumario-titulo">Mapeamento das Estruturas de Dados no Jogo</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>Onde cada estrutura aparece · Por que foi escolhida · Complexidade</span>
+  </div>
+
+  <div class="sumario-item">
+    <span><span class="sumario-num">8.</span><span class="sumario-titulo">Organização do Projeto e os Demais Módulos (visão rápida)</span></span>
+  </div>
+  <div class="sumario-item sumario-sub">
+    <span>Pastas do projeto · modelo/ · servidor.py · frontend/ · Como executar</span>
+  </div>
+</div>
+
+<!-- SEÇÃO 1 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">1</div>
+    <div class="secao-titulo">Visão Geral do Projeto</div>
+  </div>
+
+  <h3>O que é o projeto?</h3>
+  <p>
+    Este projeto implementa o famoso jogo de cartas <strong>UNO</strong> em Python, mas com um objetivo além de jogar:
+    <strong>demonstrar na prática o funcionamento de quatro estruturas de dados clássicas</strong> estudadas em Ciência da Computação.
+  </p>
+  <p>
+    O jogo pode ser jogado de duas formas: pelo <strong>terminal</strong> (<code>python uno.py</code>) ou pelo
+    <strong>navegador</strong> (<code>python servidor.py</code> e abrir <code>http://localhost:8000</code>),
+    onde você enfrenta de 1 a 3 bots. Nas duas versões, quem manda é o mesmo motor de regras em Python.
+  </p>
+
+  <div class="box box-info">
+    <div class="box-titulo">💡 Por que usar estruturas de dados?</div>
+    <p>Estruturas de dados são formas organizadas de guardar e manipular informações. Escolher a estrutura certa para cada problema torna o código mais eficiente, mais legível e mais fácil de manter.</p>
+  </div>
+
+  <h3>As quatro estruturas usadas</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-titulo">📚 Pilha (Stack)</div>
+      <p>Usada no monte de compra e no monte de descarte. Funciona como uma pilha de pratos: você sempre pega e coloca no topo. Arquivo: <code>estruturas/pilha.py</code></p>
+    </div>
+    <div class="card">
+      <div class="card-titulo">🔄 Fila (Queue)</div>
+      <p>Usada para controlar a ordem dos jogadores. Funciona como uma fila de banco: o primeiro que chegou é o primeiro atendido. Arquivo: <code>estruturas/fila.py</code></p>
+    </div>
+    <div class="card">
+      <div class="card-titulo">🔗 Lista Encadeada (Linked List)</div>
+      <p>Usada para guardar as cartas na mão de cada jogador. Cada carta aponta para a próxima, formando uma corrente. Arquivo: <code>estruturas/lista_encadeada.py</code></p>
+    </div>
+    <div class="card">
+      <div class="card-titulo">🌳 Árvore Binária de Busca (BST)</div>
+      <p>Usada para montar o ranking dos jogadores ordenado pela quantidade de cartas — sem usar sort(). Arquivo: <code>estruturas/arvore.py</code></p>
+    </div>
+  </div>
+
+  <h3>Regras do UNO implementadas</h3>
+  <ul>
+    <li>Cada jogador começa com <strong>7 cartas</strong></li>
+    <li>Só pode jogar uma carta se ela tiver a <strong>mesma cor ou o mesmo valor</strong> da carta do topo</li>
+    <li><strong>Curingas</strong> podem sempre ser jogados e permitem trocar a cor</li>
+    <li>Se não tiver carta válida, o jogador <strong>compra uma carta</strong> do monte</li>
+    <li>Cartas especiais: <strong>Pular, Inverter, +2, Curinga +4</strong></li>
+    <li>Quem ficar sem cartas <strong>vence</strong></li>
+  </ul>
+</div>
+
+<!-- SEÇÃO 2 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">2</div>
+    <div class="secao-titulo">Fundamentos de Python Usados no Código</div>
+  </div>
+
+  <h3>Importações — <code>import</code> e <code>from ... import</code></h3>
+  <p>
+    No topo do arquivo temos duas linhas de importação. Elas dizem ao Python:
+    <em>"preciso usar funcionalidades que já existem em outros lugares"</em>.
+  </p>
+
+<pre><code><span class="kw">import</span> random
+<span class="kw">from</span> collections <span class="kw">import</span> deque</code></pre>
+
+  <table>
+    <tr><th>Comando</th><th>O que faz</th></tr>
+    <tr><td><code>import random</code></td><td>Importa o módulo completo de números aleatórios do Python</td></tr>
+    <tr><td><code>from collections import deque</code></td><td>Importa apenas a classe <code>deque</code> do módulo <code>collections</code></td></tr>
+  </table>
+
+  <h3>O módulo <code>random</code> — embaralhando as cartas</h3>
+  <p>
+    O módulo <code>random</code> fornece funções para gerar resultados aleatórios.
+    No projeto, usamos <code>random.shuffle()</code> para embaralhar as cartas.
+  </p>
+
+<pre><code><span class="kw">import</span> random
+
+cartas = [<span class="st">"Vermelho 1"</span>, <span class="st">"Azul 5"</span>, <span class="st">"Verde 3"</span>]
+<span class="fn">print</span>(cartas)
+<span class="cm"># Saída: ['Vermelho 1', 'Azul 5', 'Verde 3']</span>
+
+random.<span class="fn">shuffle</span>(cartas)   <span class="cm"># Embaralha a lista no lugar</span>
+<span class="fn">print</span>(cartas)
+<span class="cm"># Saída: ['Verde 3', 'Vermelho 1', 'Azul 5']  (ordem aleatória)</span></code></pre>
+
+  <div class="box box-dica">
+    <div class="box-titulo">✅ Importante</div>
+    <p><code>random.shuffle()</code> modifica a lista original diretamente — ela não cria uma nova lista. Por isso passamos <code>self._cartas</code> direto, sem precisar guardar o resultado.</p>
+  </div>
+
+  <h3>Listas Python — <code>[]</code></h3>
+  <p>
+    Uma lista em Python é uma coleção ordenada de itens. Você pode adicionar, remover e acessar itens por posição (índice).
+  </p>
+
+<pre><code><span class="cm"># Criando uma lista vazia</span>
+minhas_cartas = []
+
+<span class="cm"># Adicionando ao final — append()</span>
+minhas_cartas.<span class="fn">append</span>(<span class="st">"Vermelho 5"</span>)
+minhas_cartas.<span class="fn">append</span>(<span class="st">"Azul 3"</span>)
+<span class="cm"># minhas_cartas = ["Vermelho 5", "Azul 3"]</span>
+
+<span class="cm"># Removendo o último — pop()</span>
+carta = minhas_cartas.<span class="fn">pop</span>()   <span class="cm"># Retorna "Azul 3" e remove da lista</span>
+
+<span class="cm"># Acessando pelo índice (começa em 0)</span>
+primeira = minhas_cartas[<span class="nm">0</span>]   <span class="cm"># "Vermelho 5"</span>
+ultima   = minhas_cartas[-<span class="nm">1</span>]  <span class="cm"># Último item</span></code></pre>
+
+  <h3>O laço <code>for ... in</code></h3>
+  <p>
+    O <code>for</code> repete um bloco de código para cada item de uma coleção.
+    É a forma mais comum de percorrer listas no Python.
+  </p>
+
+<pre><code><span class="cm"># Exemplo simples</span>
+cores = [<span class="st">"Vermelho"</span>, <span class="st">"Azul"</span>, <span class="st">"Verde"</span>, <span class="st">"Amarelo"</span>]
+
+<span class="kw">for</span> cor <span class="kw">in</span> cores:
+    <span class="fn">print</span>(cor)
+<span class="cm"># Vermelho</span>
+<span class="cm"># Azul</span>
+<span class="cm"># Verde</span>
+<span class="cm"># Amarelo</span>
+
+<span class="cm"># Com enumerate() — para ter o índice junto</span>
+<span class="kw">for</span> i, cor <span class="kw">in</span> <span class="fn">enumerate</span>(cores):
+    <span class="fn">print</span>(f<span class="st">"{i}: {cor}"</span>)
+<span class="cm"># 0: Vermelho   1: Azul   2: Verde   3: Amarelo</span></code></pre>
+
+  <p>No projeto, usamos <code>for</code> para distribuir cartas, percorrer a mão do jogador, criar o baralho, etc.</p>
+
+  <h3>O laço <code>while</code></h3>
+  <p>
+    O <code>while</code> repete um bloco enquanto uma condição for verdadeira.
+    Usado para loops que não sabemos quantas vezes vão repetir.
+  </p>
+
+<pre><code><span class="cm"># Enquanto o monte não estiver vazio, continue jogando</span>
+<span class="kw">while not</span> monte.<span class="fn">esta_vazia</span>():
+    carta = monte.<span class="fn">retirar</span>()
+    <span class="fn">print</span>(f<span class="st">"Carta retirada: {carta}"</span>)
+
+<span class="cm"># Loop infinito com saída explícita</span>
+<span class="kw">while True</span>:
+    entrada = <span class="fn">input</span>(<span class="st">"Sua jogada: "</span>)
+    <span class="kw">if</span> entrada.<span class="fn">isdigit</span>():
+        <span class="kw">break</span>  <span class="cm"># Sai do loop</span>
+    <span class="fn">print</span>(<span class="st">"Digite apenas números!"</span>)</code></pre>
+
+  <h3>f-strings — formatação de texto</h3>
+  <p>
+    f-strings (formatted strings) permitem inserir variáveis diretamente dentro de um texto, usando chaves <code>{}</code>.
+  </p>
+
+<pre><code>nome = <span class="st">"Maria"</span>
+cartas = <span class="nm">5</span>
+
+<span class="cm"># Sem f-string (trabalhoso)</span>
+<span class="fn">print</span>(<span class="st">"Jogador: "</span> + nome + <span class="st">", cartas: "</span> + <span class="fn">str</span>(cartas))
+
+<span class="cm"># Com f-string (simples e legível)</span>
+<span class="fn">print</span>(f<span class="st">"Jogador: {nome}, cartas: {cartas}"</span>)
+<span class="cm"># Saída: Jogador: Maria, cartas: 5</span>
+
+<span class="cm"># Também funciona com expressões dentro das chaves</span>
+<span class="fn">print</span>(f<span class="st">"Restam {cartas - 1} cartas após jogar"</span>)</code></pre>
+
+  <h3><code>deque</code> — fila eficiente do Python</h3>
+  <p>
+    <code>deque</code> (pronuncia-se "dek", de Double-Ended Queue) é uma estrutura de dados que permite adicionar e remover itens eficientemente tanto do início quanto do final.
+  </p>
+
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+fila = <span class="fn">deque</span>()
+fila.<span class="fn">append</span>(<span class="st">"João"</span>)    <span class="cm"># Adiciona ao final</span>
+fila.<span class="fn">append</span>(<span class="st">"Maria"</span>)
+fila.<span class="fn">append</span>(<span class="st">"Pedro"</span>)
+
+primeiro = fila.<span class="fn">popleft</span>()  <span class="cm"># Remove do início: "João"</span>
+
+<span class="cm"># Inverter a fila (carta Inverter do UNO)</span>
+fila = <span class="fn">deque</span>(<span class="fn">reversed</span>(fila))</code></pre>
+
+  <div class="box box-info">
+    <div class="box-titulo">💡 Por que deque e não lista?</div>
+    <p>Remover o primeiro elemento de uma lista Python é lento (o Python precisa mover todos os outros elementos). O <code>deque</code> faz isso em tempo constante, muito mais eficiente para filas.</p>
+  </div>
+
+  <h3>Recursão — uma função que chama a si mesma</h3>
+  <p>
+    <strong>Recursão</strong> é quando uma função chama ela mesma para resolver versões menores do mesmo problema.
+    Toda recursão precisa de um <strong>caso base</strong> (a condição que faz ela parar) — sem ele, a função
+    chamaria a si mesma para sempre. Você vai precisar desse conceito para entender a
+    <strong>Árvore Binária de Busca</strong>, pois percorrer uma árvore é naturalmente recursivo:
+    cada filho de um nó é, ele próprio, a raiz de uma árvore menor (uma <em>subárvore</em>).
+  </p>
+
+<pre><code><span class="cm"># Exemplo clássico: somar os números de 1 até n</span>
+<span class="kw">def</span> <span class="fn">soma_ate</span>(n):
+    <span class="kw">if</span> n == <span class="nm">0</span>:          <span class="cm"># CASO BASE: para de chamar a si mesma</span>
+        <span class="kw">return</span> <span class="nm">0</span>
+    <span class="kw">return</span> n + <span class="fn">soma_ate</span>(n - <span class="nm">1</span>)   <span class="cm"># PASSO RECURSIVO: problema menor</span>
+
+<span class="fn">soma_ate</span>(<span class="nm">3</span>)
+<span class="cm"># soma_ate(3) → 3 + soma_ate(2)</span>
+<span class="cm">#                   → 2 + soma_ate(1)</span>
+<span class="cm">#                       → 1 + soma_ate(0)</span>
+<span class="cm">#                           → 0      (caso base!)</span>
+<span class="cm"># Resultado: 3 + 2 + 1 + 0 = 6</span></code></pre>
+
+  <div class="box box-dica">
+    <div class="box-titulo">✅ Onde aparece no projeto</div>
+    <p>Os métodos <code>em_ordem()</code> e <code>altura()</code> da Árvore Binária de Busca (<code>estruturas/arvore.py</code>) usam recursão: o caso base é <code>no is None</code> (chegou numa ponta vazia da árvore), e o passo recursivo é visitar as subárvores esquerda e direita.</p>
+  </div>
+</div>
+
+<!-- SEÇÃO 3 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">3</div>
+    <div class="secao-titulo">Orientação a Objetos (Classes)</div>
+  </div>
+
+  <h3>O que é uma Classe?</h3>
+  <p>
+    Pense em uma classe como uma <strong>planta baixa</strong> ou <strong>molde</strong>. Ela define como um objeto vai ser,
+    quais informações ele guarda e o que ele pode fazer.
+  </p>
+  <p>
+    Um <strong>objeto</strong> é uma instância criada a partir dessa classe — é a "casa construída" com base na planta.
+  </p>
+
+<pre><code><span class="cm"># Classe = molde / planta baixa</span>
+<span class="kw">class</span> <span class="cl">Carta</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, cor, valor):
+        <span class="sf">self</span>.cor   = cor
+        <span class="sf">self</span>.valor = valor
+
+<span class="cm"># Objeto = instância criada a partir do molde</span>
+carta1 = <span class="cl">Carta</span>(<span class="st">"Vermelho"</span>, <span class="st">"5"</span>)   <span class="cm"># Cria uma carta</span>
+carta2 = <span class="cl">Carta</span>(<span class="st">"Azul"</span>, <span class="st">"Pular"</span>)   <span class="cm"># Cria outra carta</span>
+
+<span class="fn">print</span>(carta1.cor)    <span class="cm"># Vermelho</span>
+<span class="fn">print</span>(carta2.valor)  <span class="cm"># Pular</span></code></pre>
+
+  <h3>O parâmetro <code>self</code></h3>
+  <p>
+    <code>self</code> é uma referência ao próprio objeto. Quando você escreve <code>self.cor</code> dentro da classe,
+    você está dizendo: <em>"a variável <strong>cor</strong> que pertence a este objeto específico"</em>.
+  </p>
+
+<pre><code><span class="kw">class</span> <span class="cl">Carta</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, cor, valor):
+        <span class="cm"># "self.cor" = atributo do objeto</span>
+        <span class="cm"># "cor"      = parâmetro recebido</span>
+        <span class="sf">self</span>.cor   = cor    <span class="cm"># guarda a cor NO objeto</span>
+        <span class="sf">self</span>.valor = valor  <span class="cm"># guarda o valor NO objeto</span>
+
+carta_vermelha = <span class="cl">Carta</span>(<span class="st">"Vermelho"</span>, <span class="st">"7"</span>)
+carta_azul     = <span class="cl">Carta</span>(<span class="st">"Azul"</span>, <span class="st">"3"</span>)
+
+<span class="cm"># Cada objeto tem seus próprios dados</span>
+<span class="fn">print</span>(carta_vermelha.cor)  <span class="cm"># Vermelho</span>
+<span class="fn">print</span>(carta_azul.cor)      <span class="cm"># Azul</span></code></pre>
+
+  <div class="box box-dica">
+    <div class="box-titulo">✅ Analogia simples</div>
+    <p>Pense que <code>self</code> é como dizer <strong>"meu"</strong> em português. <code>self.cor</code> = "minha cor". Quando você cria dois objetos, cada um tem "sua própria" cor.</p>
+  </div>
+
+  <h3>O método <code>__init__</code> — o Construtor</h3>
+  <p>
+    O método <code>__init__</code> é chamado automaticamente quando você cria um objeto. É onde você define
+    e inicializa os atributos do objeto.
+  </p>
+
+<pre><code><span class="kw">class</span> <span class="cl">Jogador</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, nome):       <span class="cm"># Chamado ao criar: Jogador("Ana")</span>
+        <span class="sf">self</span>.nome = nome              <span class="cm"># Guarda o nome</span>
+        <span class="sf">self</span>.mao = <span class="cl">ListaEncadeada</span>()  <span class="cm"># Cria a mão (lista vazia)</span>
+
+jogador = <span class="cl">Jogador</span>(<span class="st">"Ana"</span>)
+<span class="cm"># Aqui, __init__ foi chamado com nome="Ana"</span>
+<span class="cm"># jogador.nome = "Ana"</span>
+<span class="cm"># jogador.mao  = ListaEncadeada vazia</span></code></pre>
+
+  <h3>Métodos — funções dentro de classes</h3>
+  <p>
+    Métodos são funções que pertencem a uma classe. Eles definem o que o objeto <em>sabe fazer</em>.
+  </p>
+
+<pre><code><span class="kw">class</span> <span class="cl">Carta</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, cor, valor):
+        <span class="sf">self</span>.cor   = cor
+        <span class="sf">self</span>.valor = valor
+
+    <span class="cm"># Método especial: chamado quando fazemos print(carta)</span>
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> f<span class="st">"[{self.cor} {self.valor}]"</span>
+
+    <span class="cm"># Método normal: verifica se pode jogar</span>
+    <span class="kw">def</span> <span class="fn">pode_jogar_sobre</span>(<span class="sf">self</span>, carta_do_topo):
+        <span class="kw">if</span> <span class="sf">self</span>.cor == <span class="st">"Curinga"</span>:
+            <span class="kw">return True</span>
+        <span class="kw">return</span> <span class="sf">self</span>.cor == carta_do_topo.cor <span class="kw">or</span> <span class="sf">self</span>.valor == carta_do_topo.valor
+
+<span class="cm"># Usando os métodos</span>
+minha_carta = <span class="cl">Carta</span>(<span class="st">"Vermelho"</span>, <span class="st">"5"</span>)
+topo        = <span class="cl">Carta</span>(<span class="st">"Vermelho"</span>, <span class="st">"3"</span>)
+
+<span class="fn">print</span>(minha_carta)                        <span class="cm"># [Vermelho 5]</span>
+<span class="fn">print</span>(minha_carta.<span class="fn">pode_jogar_sobre</span>(topo)) <span class="cm"># True (mesma cor)</span></code></pre>
+
+  <h3>Encadeamento de atributos — <code>self.mao.tamanho</code></h3>
+  <p>
+    Quando um atributo de um objeto é <em>outro objeto</em>, podemos acessar os atributos e métodos
+    desse segundo objeto usando o ponto <code>.</code> várias vezes. Isso se chama <strong>encadeamento</strong>.
+  </p>
+
+<pre><code><span class="cm"># A classe Jogador tem um atributo "mao"</span>
+<span class="cm"># que é um objeto do tipo ListaEncadeada</span>
+
+<span class="kw">class</span> <span class="cl">Jogador</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, nome):
+        <span class="sf">self</span>.nome = nome
+        <span class="sf">self</span>.mao  = <span class="cl">ListaEncadeada</span>()  <span class="cm"># mao é um objeto!</span>
+
+<span class="kw">class</span> <span class="cl">ListaEncadeada</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>.tamanho = <span class="nm">0</span>   <span class="cm"># tamanho é um atributo de ListaEncadeada</span>
+
+<span class="cm"># Como acessar:</span>
+jogador = <span class="cl">Jogador</span>(<span class="st">"Ana"</span>)
+
+jogador.nome           <span class="cm"># → "Ana"          (atributo direto do Jogador)</span>
+jogador.mao            <span class="cm"># → objeto ListaEncadeada</span>
+jogador.mao.tamanho    <span class="cm"># → 0              (atributo do objeto dentro do Jogador)</span></code></pre>
+
+  <div class="diagrama">  jogador  ──► (objeto Jogador)
+                │  nome     = "Ana"
+                │  mao      ──► (objeto ListaEncadeada)
+                                  │  inicio   = None
+                                  │  tamanho  = 0
+
+  jogador.mao.tamanho
+  │       │    └── atributo de ListaEncadeada
+  │       └────── atributo de Jogador (que é um ListaEncadeada)
+  └────────────── o objeto Jogador</div>
+
+  <h3>Atributos com underscore — <code>self._cartas</code></h3>
+  <p>
+    Por convenção, atributos com underscore no início (<code>_cartas</code>) indicam que são <strong>privados</strong>:
+    devem ser usados apenas dentro da própria classe, não de fora.
+  </p>
+
+<pre><code><span class="kw">class</span> <span class="cl">Pilha</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>._cartas = []   <span class="cm"># "_" = "use apenas dentro da classe"</span>
+
+    <span class="kw">def</span> <span class="fn">empurrar</span>(<span class="sf">self</span>, carta):
+        <span class="sf">self</span>._cartas.<span class="fn">append</span>(carta)  <span class="cm"># OK — usamos dentro da classe</span>
+
+<span class="cm"># De fora, o certo é usar os métodos, não acessar direto:</span>
+pilha = <span class="cl">Pilha</span>()
+pilha.<span class="fn">empurrar</span>(carta)    <span class="cm"># ✅ certo</span>
+pilha._cartas             <span class="cm"># ⚠️ tecnicamente funciona, mas evite</span></code></pre>
+</div>
+
+<!-- SEÇÃO 4 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">4</div>
+    <div class="secao-titulo">Estruturas de Dados em Profundidade</div>
+  </div>
+
+  <h3>Pilha (Stack) — LIFO</h3>
+  <p>
+    Uma <strong>Pilha</strong> é uma estrutura onde o último elemento inserido é o primeiro a ser removido.
+    A sigla <strong>LIFO</strong> vem do inglês: <em>Last In, First Out</em> (último a entrar, primeiro a sair).
+  </p>
+
+  <div class="diagrama">  PILHA (Stack) — como uma pilha de pratos:
+
+  ┌─────────────┐  ◄── TOPO (último inserido, primeiro a sair)
+  │  [Verde 7]  │  ◄── empurrar() adiciona aqui
+  │  [Azul 3]   │      retirar() remove daqui
+  │  [Verm. 5]  │
+  └─────────────┘  ◄── BASE (primeiro inserido, último a sair)
+
+  Operações:
+  empurrar(carta)  →  adiciona no topo
+  retirar()        →  remove do topo e retorna
+  ver_topo()       →  olha o topo sem remover</div>
+
+<pre><code><span class="kw">class</span> <span class="cl">Pilha</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>._cartas = []         <span class="cm"># Lista Python como base</span>
+
+    <span class="kw">def</span> <span class="fn">empurrar</span>(<span class="sf">self</span>, carta):
+        <span class="sf">self</span>._cartas.<span class="fn">append</span>(carta)  <span class="cm"># append() = adiciona ao final (topo)</span>
+
+    <span class="kw">def</span> <span class="fn">retirar</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="sf">self</span>._cartas.<span class="fn">pop</span>()   <span class="cm"># pop() = remove e retorna o último</span>
+
+    <span class="kw">def</span> <span class="fn">ver_topo</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="sf">self</span>._cartas[-<span class="nm">1</span>]    <span class="cm"># [-1] = último elemento da lista</span></code></pre>
+
+  <div class="box box-info">
+    <div class="box-titulo">🃏 No UNO</div>
+    <p><strong>Monte de compra:</strong> você sempre compra a carta do topo. <strong>Monte de descarte:</strong> você sempre joga sua carta no topo, e a carta visível é o topo da pilha.</p>
+  </div>
+
+  <h3>Fila (Queue) — FIFO</h3>
+  <p>
+    Uma <strong>Fila</strong> é uma estrutura onde o primeiro elemento inserido é o primeiro a ser removido.
+    A sigla <strong>FIFO</strong> vem do inglês: <em>First In, First Out</em> (primeiro a entrar, primeiro a sair).
+  </p>
+
+  <div class="diagrama">  FILA (Queue) — como uma fila de banco:
+
+  ENTRADA                              SAÍDA
+     ▼                                   ▼
+  [Pedro] → [Maria] → [João] → [Ana]
+  entrar()                         proximo()
+
+  entrar(jogador)  →  adiciona no final da fila
+  proximo()        →  remove do início e retorna
+  inverter()       →  inverte toda a ordem (carta Inverter)</div>
+
+<pre><code><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">class</span> <span class="cl">Fila</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>._jogadores = <span class="fn">deque</span>()
+
+    <span class="kw">def</span> <span class="fn">entrar</span>(<span class="sf">self</span>, jogador):
+        <span class="sf">self</span>._jogadores.<span class="fn">append</span>(jogador)    <span class="cm"># Entra no final</span>
+
+    <span class="kw">def</span> <span class="fn">proximo</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="sf">self</span>._jogadores.<span class="fn">popleft</span>()  <span class="cm"># Sai do início</span>
+
+    <span class="kw">def</span> <span class="fn">inverter</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>._jogadores = <span class="fn">deque</span>(<span class="fn">reversed</span>(<span class="sf">self</span>._jogadores))</code></pre>
+
+  <h3>Lista Encadeada (Linked List)</h3>
+  <p>
+    Uma <strong>Lista Encadeada</strong> é uma sequência de nós onde cada nó guarda um dado
+    e um ponteiro para o próximo nó. Diferente de uma lista comum, os elementos não ficam
+    em posições contíguas na memória — cada nó pode estar em qualquer lugar,
+    pois o que os conecta é o ponteiro.
+  </p>
+
+  <div class="diagrama">  LISTA ENCADEADA:
+
+  inicio
+    │
+    ▼
+  ┌──────────────┬──────┐     ┌──────────────┬──────┐     ┌──────────────┬──────┐
+  │ carta:       │próx  │────►│ carta:       │próx  │────►│ carta:       │próx  │
+  │ [Verm. 5]    │      │     │ [Azul 3]     │      │     │ [Curinga]    │ None │
+  └──────────────┴──────┘     └──────────────┴──────┘     └──────────────┴──────┘
+       Nó 0                        Nó 1                        Nó 2 (último)</div>
+
+<pre><code><span class="kw">class</span> <span class="cl">No</span>:
+    <span class="cm"># Um nó: guarda UMA carta + aponta para o próximo nó</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, carta):
+        <span class="sf">self</span>.carta   = carta  <span class="cm"># O dado em si</span>
+        <span class="sf">self</span>.proximo = <span class="kw">None</span>  <span class="cm"># Ponteiro para o próximo nó</span>
+
+<span class="kw">class</span> <span class="cl">ListaEncadeada</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>.inicio  = <span class="kw">None</span>  <span class="cm"># Aponta para o primeiro nó</span>
+        <span class="sf">self</span>.tamanho = <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">adicionar</span>(<span class="sf">self</span>, carta):
+        novo_no = <span class="cl">No</span>(carta)        <span class="cm"># Cria um novo nó</span>
+        <span class="kw">if</span> <span class="sf">self</span>.inicio <span class="kw">is None</span>:
+            <span class="sf">self</span>.inicio = novo_no  <span class="cm"># Lista vazia: novo nó é o primeiro</span>
+        <span class="kw">else</span>:
+            atual = <span class="sf">self</span>.inicio
+            <span class="kw">while</span> atual.proximo <span class="kw">is not None</span>:
+                atual = atual.proximo  <span class="cm"># Anda até o último nó</span>
+            atual.proximo = novo_no    <span class="cm"># Conecta o novo nó ao final</span>
+        <span class="sf">self</span>.tamanho += <span class="nm">1</span></code></pre>
+
+  <h3>Árvore Binária de Busca (BST) — dados que se ordenam sozinhos</h3>
+  <p>
+    Uma <strong>árvore</strong> é uma estrutura <em>hierárquica</em>: em vez de cada elemento apontar para
+    um único próximo (como na lista encadeada), cada elemento — chamado de <strong>nó</strong> — pode
+    apontar para vários <strong>filhos</strong>. O nó do topo é a <strong>raiz</strong>, e nós sem filhos
+    são as <strong>folhas</strong>.
+  </p>
+  <p>
+    Uma <strong>árvore binária</strong> é uma árvore em que cada nó tem <strong>no máximo dois filhos</strong>:
+    um à <strong>esquerda</strong> e um à <strong>direita</strong>. E uma
+    <strong>Árvore Binária de Busca</strong> (ABB, ou BST em inglês — <em>Binary Search Tree</em>)
+    acrescenta uma regra de ouro sobre onde cada valor pode ficar:
+  </p>
+
+  <div class="destaque">
+    <h4>🌳 A propriedade da ABB</h4>
+    <p>
+      Para <strong>todo</strong> nó da árvore:
+      tudo que está na subárvore <strong>esquerda</strong> tem chave <strong>menor</strong> que a do nó,
+      e tudo que está na subárvore <strong>direita</strong> tem chave <strong>maior ou igual</strong>.
+      Essa regra vale em todos os níveis, não só na raiz.
+    </p>
+  </div>
+
+  <div class="diagrama">  ÁRVORE BINÁRIA DE BUSCA — vocabulário:
+
+                    ┌─────────┐
+            raiz ──►│  (5)    │          nível 1
+                    └────┬────┘
+                  ┌──────┴──────┐
+              ┌───▼───┐     ┌───▼───┐
+              │  (2)  │     │  (7)  │    nível 2
+              └───┬───┘     └───────┘
+                  └───┐      folha ▲
+                  ┌───▼───┐
+                  │  (3)  │              nível 3
+                  └───────┘
+                   folha
+
+  menores que 5 ficam à ESQUERDA ◄── (5) ──► maiores ou iguais à DIREITA
+  altura desta árvore = 3 (número de níveis no caminho mais longo)</div>
+
+  <h4>Por que o UNO precisa de uma árvore?</h4>
+  <p>
+    Para mostrar o <strong>ranking</strong>: a lista de jogadores ordenada por quem tem
+    <strong>menos cartas</strong> (quem está mais perto de vencer). A sacada é que a ABB
+    <strong>mantém os dados ordenados pela própria forma da árvore</strong> — a posição em que cada
+    jogador é inserido já o deixa no lugar certo. Depois, basta ler a árvore na ordem certa e o
+    ranking sai pronto, <strong>sem chamar nenhum <code>sort()</code></strong>.
+  </p>
+  <p>
+    No projeto, a <strong>chave</strong> de cada nó é a quantidade de cartas na mão do jogador, e o
+    <strong>valor</strong> é o nome dele.
+  </p>
+
+  <h4>Inserção — passo a passo</h4>
+  <p>
+    Para inserir, compare a nova chave com o nó atual: <strong>menor → vai para a esquerda;
+    maior ou igual → vai para a direita</strong>. Repita até achar um espaço vazio (<code>None</code>)
+    e pendure o novo nó ali. Veja a construção do ranking de uma partida real, inserindo os jogadores
+    na ordem em que estão na fila — Ana tem 5 cartas, Beto tem 2, Caio tem 7 e Duda tem 2:
+  </p>
+
+  <div class="diagrama">  inserir(5, "Ana")        inserir(2, "Beto")       inserir(7, "Caio")
+  árvore vazia:            2 &lt; 5? esquerda:          7 &gt;= 5? direita:
+  vira a raiz
+      (5,Ana)                  (5,Ana)                   (5,Ana)
+                              /                         /       \
+                        (2,Beto)                  (2,Beto)    (7,Caio)
+
+  inserir(2, "Duda")  →  compara com a raiz: 2 &lt; 5, vai para a ESQUERDA
+                         compara com (2,Beto): 2 &gt;= 2, vai para a DIREITA
+
+                             (5,Ana)
+                            /       \
+                      (2,Beto)    (7,Caio)
+                            \
+                          (2,Duda)   ◄── empate (chave igual) vai para a direita</div>
+
+  <div class="box box-atencao">
+    <div class="box-titulo">⚠️ Chaves repetidas</div>
+    <p>Duas pessoas podem ter a mesma quantidade de cartas (como Beto e Duda, com 2). Por isso a regra do projeto é <strong>maior OU IGUAL vai para a direita</strong> — o empate não se perde, só fica depois do que já estava na árvore.</p>
+  </div>
+
+  <h4>Percurso em ordem (in-order) — a mágica da ordenação</h4>
+  <p>
+    Existem várias formas de visitar todos os nós de uma árvore (pré-ordem, em ordem, pós-ordem).
+    A que nos interessa é o <strong>percurso em ordem</strong>, que visita:
+    <strong>1º toda a subárvore esquerda → 2º o próprio nó → 3º toda a subárvore direita</strong>,
+    aplicando essa regra recursivamente em cada nó. Pela propriedade da ABB, isso entrega as chaves
+    em <strong>ordem crescente</strong>:
+  </p>
+
+  <div class="diagrama">  Percurso EM ORDEM na árvore que montamos:
+
+                             (5,Ana)        ④
+                            /       \
+                  ②  (2,Beto)       (7,Caio)  ⑤
+                            \
+                         (2,Duda)  ③
+
+  1. Desce tudo para a esquerda a partir da raiz... chega em (2,Beto)
+  2. Visita (2,Beto)                         → 1º do ranking
+  3. Direita de Beto: visita (2,Duda)        → 2º do ranking
+  4. Subárvore esquerda da raiz acabou: visita (5,Ana)   → 3º
+  5. Direita da raiz: visita (7,Caio)        → 4º
+
+  Resultado: [(2,Beto), (2,Duda), (5,Ana), (7,Caio)]
+              ▲ ordenado do menor para o maior, sem sort()!
+
+  No jogo: 1º Beto (2 cartas) · 2º Duda (2) · 3º Ana (5) · 4º Caio (7)</div>
+
+  <h4>Busca — por que "de busca" no nome</h4>
+  <p>
+    A mesma regra que guia a inserção também guia a <strong>busca</strong>: para achar uma chave,
+    compare com o nó atual e desça só para um dos lados. A cada passo você <strong>descarta metade
+    da árvore</strong> (quando ela está equilibrada) — é a mesma ideia da busca binária, daí o nome.
+  </p>
+
+  <h4>Altura e desempenho</h4>
+  <p>
+    A <strong>altura</strong> é o número de níveis no caminho mais longo da raiz até uma folha.
+    Ela determina o custo das operações: inserir e buscar custam <strong>O(altura)</strong>.
+  </p>
+  <ul>
+    <li><strong>Árvore equilibrada</strong> (galhos bem distribuídos): altura ≈ log₂(n) → operações <strong>O(log n)</strong>, muito rápidas.</li>
+    <li><strong>Pior caso</strong>: inserindo chaves já ordenadas (1, 2, 3, 4...), todo mundo vai para a direita e a árvore degenera num "espeto" — vira uma lista encadeada de altura n, e as operações caem para <strong>O(n)</strong>.</li>
+  </ul>
+
+  <div class="diagrama">  EQUILIBRADA (boa)            DEGENERADA / "espeto" (pior caso)
+  inserindo 4, 2, 6, 1, 3:     inserindo 1, 2, 3, 4 (já ordenado):
+
+        (4)                        (1)
+       /   \                          \
+     (2)   (6)                        (2)
+    /   \                                \
+  (1)   (3)                              (3)
+                                            \
+  altura = 3 ≈ log₂(5)                      (4)    altura = 4 = n</div>
+
+  <div class="box box-info">
+    <div class="box-titulo">🃏 No UNO</div>
+    <p>Com 2 a 4 jogadores a árvore é minúscula, então desempenho não é o ponto — o objetivo é didático: mostrar que a ABB ordena "de graça" pela sua própria estrutura. Em problemas reais (índices de bancos de dados, por exemplo), essa mesma ideia, com árvores que se reequilibram sozinhas (AVL, Red-Black), é o que torna buscas em milhões de registros quase instantâneas.</p>
+  </div>
+
+  <h3>Comparação entre as quatro estruturas</h3>
+  <table>
+    <tr>
+      <th>Estrutura</th>
+      <th>Forma</th>
+      <th>Entra</th>
+      <th>Sai / Lê</th>
+      <th>No UNO</th>
+    </tr>
+    <tr>
+      <td><strong>Pilha</strong></td>
+      <td>Linear (LIFO)</td>
+      <td>No topo</td>
+      <td>Do topo</td>
+      <td>Monte de compra e descarte</td>
+    </tr>
+    <tr>
+      <td><strong>Fila</strong></td>
+      <td>Linear (FIFO)</td>
+      <td>No final</td>
+      <td>Do início</td>
+      <td>Ordem dos jogadores</td>
+    </tr>
+    <tr>
+      <td><strong>Lista Encadeada</strong></td>
+      <td>Linear (nó a nó)</td>
+      <td>No final</td>
+      <td>De qualquer posição</td>
+      <td>Cartas na mão de cada jogador</td>
+    </tr>
+    <tr>
+      <td><strong>Árvore Binária de Busca</strong></td>
+      <td>Hierárquica</td>
+      <td>Na posição ditada pela chave</td>
+      <td>Em ordem (já ordenado)</td>
+      <td>Ranking dos jogadores</td>
+    </tr>
+  </table>
+
+  <div class="box box-dica">
+    <div class="box-titulo">✅ Como decorar a diferença</div>
+    <p><strong>Pilha</strong> = pilha de pratos (mexe só no topo). <strong>Fila</strong> = fila de banco (entra atrás, sai na frente). <strong>Lista encadeada</strong> = corrente de elos (anda elo por elo). <strong>ABB</strong> = árvore genealógica organizada (menores à esquerda, maiores à direita — e ler "da esquerda para a direita" devolve tudo em ordem).</p>
+  </div>
+</div>
+
+<!-- SEÇÃO 5 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">5</div>
+    <div class="secao-titulo">As Classes da Pasta estruturas/ Explicadas Linha a Linha</div>
+  </div>
+
+  <p>
+    Toda estrutura de dados do projeto vive na pasta <code>estruturas/</code>, cada uma em seu
+    próprio arquivo, <strong>independente das regras do UNO</strong> — elas guardam "cartas" e
+    "jogadores", mas funcionariam igual guardando qualquer outra coisa. Esta é a parte mais
+    importante do projeto para estudar.
+  </p>
+
+  <h3>Classes <code>No</code> e <code>ListaEncadeada</code> — <code>estruturas/lista_encadeada.py</code></h3>
+  <p><code>No</code> é a unidade mínima da lista. <code>ListaEncadeada</code> gerencia o conjunto de nós.</p>
+
+<pre><code><span class="kw">class</span> <span class="cl">No</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, carta):
+        <span class="sf">self</span>.carta   = carta  <span class="cm"># A carta guardada neste nó</span>
+        <span class="sf">self</span>.proximo = <span class="kw">None</span>  <span class="cm"># Ponteiro: aponta para o próximo nó (ou None se for o último)</span>
+
+<span class="kw">class</span> <span class="cl">ListaEncadeada</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>.inicio  = <span class="kw">None</span>  <span class="cm"># Primeiro nó da lista</span>
+        <span class="sf">self</span>.tamanho = <span class="nm">0</span>    <span class="cm"># Conta quantas cartas há na mão</span>
+
+    <span class="kw">def</span> <span class="fn">adicionar</span>(<span class="sf">self</span>, carta):
+        novo_no = <span class="cl">No</span>(carta)
+        <span class="kw">if</span> <span class="sf">self</span>.inicio <span class="kw">is None</span>:     <span class="cm"># Se a lista estiver vazia</span>
+            <span class="sf">self</span>.inicio = novo_no
+        <span class="kw">else</span>:
+            atual = <span class="sf">self</span>.inicio       <span class="cm"># Começa do início</span>
+            <span class="kw">while</span> atual.proximo <span class="kw">is not None</span>:
+                atual = atual.proximo  <span class="cm"># Avança até o último nó</span>
+            atual.proximo = novo_no    <span class="cm"># Conecta o novo nó
+</span>        <span class="sf">self</span>.tamanho += <span class="nm">1</span>
+
+    <span class="kw">def</span> <span class="fn">remover_por_indice</span>(<span class="sf">self</span>, indice):
+        <span class="kw">if</span> indice == <span class="nm">0</span>:                      <span class="cm"># Remove o primeiro</span>
+            carta = <span class="sf">self</span>.inicio.carta
+            <span class="sf">self</span>.inicio = <span class="sf">self</span>.inicio.proximo <span class="cm"># O segundo vira o primeiro</span>
+            <span class="sf">self</span>.tamanho -= <span class="nm">1</span>
+            <span class="kw">return</span> carta
+        atual = <span class="sf">self</span>.inicio
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(indice - <span class="nm">1</span>):        <span class="cm"># Chega até o nó anterior</span>
+            atual = atual.proximo
+        carta = atual.proximo.carta
+        atual.proximo = atual.proximo.proximo  <span class="cm"># "Pula" o nó removido</span>
+        <span class="sf">self</span>.tamanho -= <span class="nm">1</span>
+        <span class="kw">return</span> carta</code></pre>
+
+  <div class="box box-info">
+    <div class="box-titulo">💡 Como funciona a remoção</div>
+    <p>Remover um nó do meio é como remover um elo de uma corrente: você conecta o elo anterior diretamente ao elo seguinte, e o elo do meio "cai fora". O Python descarta automaticamente objetos sem referências (garbage collection).</p>
+  </div>
+
+  <div class="diagrama">  Removendo o nó 1 (índice 1):
+
+  ANTES:
+  [Verm.5] → [Azul 3] → [Curinga]
+      0           1           2
+
+  atual aponta para nó 0:
+  atual.proximo = atual.proximo.proximo
+       ↕                   ↕
+  [Azul 3]           [Curinga]
+
+  DEPOIS:
+  [Verm.5] → [Curinga]      [Azul 3] (descartado)
+      0           2</div>
+
+  <h3>Classe <code>Pilha</code> — <code>estruturas/pilha.py</code></h3>
+<pre><code><span class="kw">class</span> <span class="cl">Pilha</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>._cartas = []
+
+    <span class="kw">def</span> <span class="fn">empurrar</span>(<span class="sf">self</span>, carta):
+        <span class="sf">self</span>._cartas.<span class="fn">append</span>(carta)    <span class="cm"># Topo = final da lista</span>
+
+    <span class="kw">def</span> <span class="fn">retirar</span>(<span class="sf">self</span>):
+        <span class="kw">if</span> <span class="sf">self</span>.<span class="fn">esta_vazia</span>(): <span class="kw">return None</span>
+        <span class="kw">return</span> <span class="sf">self</span>._cartas.<span class="fn">pop</span>()     <span class="cm"># Remove e retorna o último</span>
+
+    <span class="kw">def</span> <span class="fn">ver_topo</span>(<span class="sf">self</span>):
+        <span class="kw">if</span> <span class="sf">self</span>.<span class="fn">esta_vazia</span>(): <span class="kw">return None</span>
+        <span class="kw">return</span> <span class="sf">self</span>._cartas[-<span class="nm">1</span>]       <span class="cm"># Olha sem remover</span>
+
+    <span class="kw">def</span> <span class="fn">esta_vazia</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="fn">len</span>(<span class="sf">self</span>._cartas) == <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">tamanho</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="fn">len</span>(<span class="sf">self</span>._cartas)
+
+    <span class="kw">def</span> <span class="fn">embaralhar</span>(<span class="sf">self</span>):
+        random.<span class="fn">shuffle</span>(<span class="sf">self</span>._cartas)</code></pre>
+
+  <h3>Classe <code>Fila</code> — <code>estruturas/fila.py</code></h3>
+<pre><code><span class="kw">class</span> <span class="cl">Fila</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>):
+        <span class="sf">self</span>._jogadores = <span class="fn">deque</span>()
+
+    <span class="kw">def</span> <span class="fn">entrar</span>(<span class="sf">self</span>, jogador):
+        <span class="sf">self</span>._jogadores.<span class="fn">append</span>(jogador)      <span class="cm"># Entra no final</span>
+
+    <span class="kw">def</span> <span class="fn">proximo</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="sf">self</span>._jogadores.<span class="fn">popleft</span>()    <span class="cm"># Sai do início</span>
+
+    <span class="kw">def</span> <span class="fn">inverter</span>(<span class="sf">self</span>):
+        <span class="cm"># reversed() inverte o deque, depois criamos um novo deque</span>
+        <span class="sf">self</span>._jogadores = <span class="fn">deque</span>(<span class="fn">reversed</span>(<span class="sf">self</span>._jogadores))
+
+    <span class="kw">def</span> <span class="fn">esta_vazia</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="fn">len</span>(<span class="sf">self</span>._jogadores) == <span class="nm">0</span></code></pre>
+
+  <h3>Classes <code>NoArvore</code> e <code>ArvoreBinariaBusca</code> — <code>estruturas/arvore.py</code></h3>
+  <p>
+    Assim como a lista encadeada tem o <code>No</code>, a árvore tem o <code>NoArvore</code>. A diferença
+    é que, em vez de <strong>um</strong> ponteiro (<code>proximo</code>), cada nó da árvore tem
+    <strong>dois</strong> (<code>esquerda</code> e <code>direita</code>) — e guarda um par
+    <strong>chave + valor</strong> em vez de um dado só:
+  </p>
+
+<pre><code><span class="kw">class</span> <span class="cl">NoArvore</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="sf">self</span>, chave, valor):
+        <span class="sf">self</span>.chave    = chave   <span class="cm"># Quantidade de cartas (usada para comparar)</span>
+        <span class="sf">self</span>.valor    = valor   <span class="cm"># Nome do jogador (o dado que carregamos junto)</span>
+        <span class="sf">self</span>.esquerda = <span class="kw">None</span>   <span class="cm"># Filho com chave MENOR</span>
+        <span class="sf">self</span>.direita  = <span class="kw">None</span>   <span class="cm"># Filho com chave MAIOR OU IGUAL</span></code></pre>
+
+  <h4>Método <code>inserir()</code> — descendo até achar um lugar vago</h4>
+  <p>
+    A inserção é feita com um <code>while True</code>: a partir da raiz, compara a chave nova com a do
+    nó atual e desce para o lado correto. Quando o lado escolhido está vazio (<code>None</code>),
+    pendura o nó novo ali e encerra com <code>return</code>:
+  </p>
+
+<pre><code>    <span class="kw">def</span> <span class="fn">inserir</span>(<span class="sf">self</span>, chave, valor):
+        novo = <span class="cl">NoArvore</span>(chave, valor)
+
+        <span class="kw">if</span> <span class="sf">self</span>.raiz <span class="kw">is None</span>:       <span class="cm"># Árvore vazia:</span>
+            <span class="sf">self</span>.raiz = novo           <span class="cm"># o novo nó vira a raiz</span>
+            <span class="kw">return</span>
+
+        atual = <span class="sf">self</span>.raiz             <span class="cm"># Começa comparando com a raiz</span>
+        <span class="kw">while True</span>:
+            <span class="kw">if</span> chave &lt; atual.chave:             <span class="cm"># MENOR → esquerda</span>
+                <span class="kw">if</span> atual.esquerda <span class="kw">is None</span>:      <span class="cm"># Achou lugar vago?</span>
+                    atual.esquerda = novo          <span class="cm"># Pendura aqui</span>
+                    <span class="kw">return</span>
+                atual = atual.esquerda             <span class="cm"># Senão, continua descendo</span>
+            <span class="kw">else</span>:                               <span class="cm"># MAIOR OU IGUAL → direita</span>
+                <span class="kw">if</span> atual.direita <span class="kw">is None</span>:
+                    atual.direita = novo
+                    <span class="kw">return</span>
+                atual = atual.direita</code></pre>
+
+  <h4>Método <code>em_ordem()</code> — leitura ordenada com recursão</h4>
+  <p>
+    Aqui entra a <strong>recursão</strong> da Seção 2. O método público só prepara a lista de
+    resultado e dispara o método recursivo a partir da raiz. O recursivo segue a receita do
+    percurso em ordem: <strong>esquerda → o próprio nó → direita</strong>:
+  </p>
+
+<pre><code>    <span class="kw">def</span> <span class="fn">em_ordem</span>(<span class="sf">self</span>):
+        resultado = []
+        <span class="sf">self</span>.<span class="fn">_em_ordem_recursivo</span>(<span class="sf">self</span>.raiz, resultado)
+        <span class="kw">return</span> resultado    <span class="cm"># Lista de tuplas (chave, valor) em ordem crescente</span>
+
+    <span class="kw">def</span> <span class="fn">_em_ordem_recursivo</span>(<span class="sf">self</span>, no, resultado):
+        <span class="kw">if</span> no <span class="kw">is None</span>:      <span class="cm"># CASO BASE: ponta vazia, volta sem fazer nada</span>
+            <span class="kw">return</span>
+        <span class="sf">self</span>.<span class="fn">_em_ordem_recursivo</span>(no.esquerda, resultado)  <span class="cm"># 1º: tudo à esquerda</span>
+        resultado.<span class="fn">append</span>((no.chave, no.valor))            <span class="cm"># 2º: o próprio nó</span>
+        <span class="sf">self</span>.<span class="fn">_em_ordem_recursivo</span>(no.direita, resultado)   <span class="cm"># 3º: tudo à direita</span></code></pre>
+
+  <div class="box box-dica">
+    <div class="box-titulo">✅ Para acompanhar a recursão</div>
+    <p>Leia assim: "antes de me anotar na lista, anote todo mundo menor que eu (subárvore esquerda); depois de mim, anote todo mundo maior ou igual (subárvore direita)". Como cada nó aplica essa mesma regra, a lista final sai inteira em ordem crescente.</p>
+  </div>
+
+  <h4>Métodos <code>buscar()</code> e <code>altura()</code></h4>
+
+<pre><code>    <span class="kw">def</span> <span class="fn">buscar</span>(<span class="sf">self</span>, chave):
+        atual = <span class="sf">self</span>.raiz
+        <span class="kw">while</span> atual <span class="kw">is not None</span>:
+            <span class="kw">if</span> chave == atual.chave:     <span class="cm"># Achou!</span>
+                <span class="kw">return</span> atual.valor
+            <span class="kw">if</span> chave &lt; atual.chave:      <span class="cm"># Menor: só pode estar à esquerda</span>
+                atual = atual.esquerda
+            <span class="kw">else</span>:                        <span class="cm"># Maior: só pode estar à direita</span>
+                atual = atual.direita
+        <span class="kw">return None</span>                      <span class="cm"># Chegou numa ponta vazia: não existe</span>
+
+    <span class="kw">def</span> <span class="fn">altura</span>(<span class="sf">self</span>):
+        <span class="kw">return</span> <span class="sf">self</span>.<span class="fn">_altura_recursiva</span>(<span class="sf">self</span>.raiz)
+
+    <span class="kw">def</span> <span class="fn">_altura_recursiva</span>(<span class="sf">self</span>, no):
+        <span class="kw">if</span> no <span class="kw">is None</span>:               <span class="cm"># CASO BASE: árvore vazia tem altura 0</span>
+            <span class="kw">return</span> <span class="nm">0</span>
+        altura_esq = <span class="sf">self</span>.<span class="fn">_altura_recursiva</span>(no.esquerda)
+        altura_dir = <span class="sf">self</span>.<span class="fn">_altura_recursiva</span>(no.direita)
+        <span class="kw">return</span> <span class="nm">1</span> + <span class="fn">max</span>(altura_esq, altura_dir)  <span class="cm"># 1 (eu) + o maior galho</span></code></pre>
+
+  <h4>Onde a árvore é usada no jogo — <code>JogoUno.ranking()</code></h4>
+  <p>
+    O motor do jogo (<code>modelo/jogo.py</code>) monta uma árvore nova a cada consulta do ranking:
+    insere cada jogador usando a quantidade de cartas como chave e lê tudo com <code>em_ordem()</code>.
+    O resultado já sai ordenado de quem está ganhando para quem está perdendo:
+  </p>
+
+<pre><code>    <span class="kw">def</span> <span class="fn">ranking</span>(<span class="sf">self</span>):
+        arvore = <span class="cl">ArvoreBinariaBusca</span>()
+        <span class="kw">for</span> jogador <span class="kw">in</span> <span class="sf">self</span>.fila_jogadores.<span class="fn">listar</span>():
+            arvore.<span class="fn">inserir</span>(jogador.<span class="fn">quantidade_cartas</span>(), jogador.nome)
+
+        <span class="kw">return</span> [
+            {<span class="st">"nome"</span>: nome, <span class="st">"cartas"</span>: quantidade}
+            <span class="kw">for</span> quantidade, nome <span class="kw">in</span> arvore.<span class="fn">em_ordem</span>()
+        ]</code></pre>
+
+  <div class="box box-info">
+    <div class="box-titulo">🃏 Onde você vê isso funcionando</div>
+    <p>Na versão web, o painel <strong>"🏆 Ranking"</strong> da lateral é exatamente o retorno de <code>ranking()</code>, atualizado a cada jogada. No terminal, o ranking aparece ao final da partida.</p>
+  </div>
+
+  <table>
+    <tr><th>Método da ABB</th><th>Técnica</th><th>O que faz</th></tr>
+    <tr><td><code>inserir(chave, valor)</code></td><td>Laço <code>while</code></td><td>Desce comparando até achar um lugar vago</td></tr>
+    <tr><td><code>em_ordem()</code></td><td>Recursão</td><td>Devolve tudo em ordem crescente de chave</td></tr>
+    <tr><td><code>buscar(chave)</code></td><td>Laço <code>while</code></td><td>Acha um valor descartando metade da árvore por passo</td></tr>
+    <tr><td><code>altura()</code></td><td>Recursão</td><td>Mede o caminho mais longo da raiz até uma folha</td></tr>
+  </table>
+</div>
+
+<!-- SEÇÃO 6 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">6</div>
+    <div class="secao-titulo">Fluxo Completo do Jogo</div>
+  </div>
+
+  <p>
+    Todo o fluxo abaixo acontece dentro do motor do jogo, em <code>modelo/jogo.py</code> (classe
+    <code>JogoUno</code>). Repare como cada passo é, no fundo, uma operação sobre uma das
+    estruturas da Seção 4.
+  </p>
+
+  <h3>Inicialização</h3>
+
+  <div class="fluxo">
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">1</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Criar o baralho</strong><p>108 cartas são criadas e embaralhadas. Todas são colocadas na <strong>Pilha</strong> de compra.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">2</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Criar jogadores</strong><p>Cada jogador é criado e entra na <strong>Fila</strong> na ordem que foram cadastrados.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">3</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Distribuir 7 cartas</strong><p>Cada carta é retirada da <strong>Pilha</strong> de compra e adicionada à <strong>Lista Encadeada</strong> de cada jogador.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">4</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Virar a primeira carta</strong><p>Uma carta (não-curinga) é retirada da <strong>Pilha</strong> de compra e colocada na <strong>Pilha</strong> de descarte. A cor atual é definida.</p></div>
+    </div>
+  </div>
+
+  <h3>Loop principal — cada rodada</h3>
+
+  <div class="fluxo">
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">A</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Pegar o jogador da vez</strong><p><code>fila_jogadores.proximo()</code> retira o primeiro da <strong>Fila</strong>.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">B</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Verificar se tem carta válida</strong><p>Percorre a <strong>Lista Encadeada</strong> do jogador comparando cada carta com o topo da <strong>Pilha</strong> de descarte.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">C</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Jogar ou comprar</strong><p>Se tem carta válida: jogador escolhe qual jogar, a carta é removida da <strong>Lista Encadeada</strong> e empurrada na <strong>Pilha</strong> de descarte. Se não tem: compra uma da <strong>Pilha</strong> de compra.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">D</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Verificar vitória</strong><p>Se a <strong>Lista Encadeada</strong> do jogador estiver vazia (<code>tamanho == 0</code>), ele venceu.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">E</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Devolver para a fila</strong><p>O jogador entra no final da <strong>Fila</strong> novamente com <code>fila_jogadores.entrar(jogador)</code>.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">F</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Aplicar efeitos especiais</strong><p>Se a carta jogada foi especial, aplica o efeito sobre o próximo da <strong>Fila</strong>.</p></div>
+    </div>
+    <div class="fluxo-item">
+      <div class="fluxo-esq"><div class="fluxo-circulo">G</div><div class="fluxo-linha"></div></div>
+      <div class="fluxo-conteudo"><strong>Atualizar o ranking</strong><p>A interface chama <code>ranking()</code>, que insere cada jogador em uma <strong>Árvore Binária de Busca</strong> (chave = quantidade de cartas) e lê o resultado com o percurso em ordem.</p></div>
+    </div>
+  </div>
+
+  <h3>Efeitos das cartas especiais</h3>
+
+  <table>
+    <tr><th>Carta</th><th>Efeito</th><th>Estrutura envolvida</th></tr>
+    <tr>
+      <td><strong>Pular</strong></td>
+      <td>O próximo jogador é removido da fila, devolvido ao final sem jogar.</td>
+      <td>Fila — <code>proximo()</code> + <code>entrar()</code></td>
+    </tr>
+    <tr>
+      <td><strong>Inverter</strong></td>
+      <td>A ordem de toda a fila é invertida.</td>
+      <td>Fila — <code>inverter()</code></td>
+    </tr>
+    <tr>
+      <td><strong>+2</strong></td>
+      <td>O próximo compra 2 cartas da pilha e perde a vez.</td>
+      <td>Pilha + Lista Encadeada + Fila</td>
+    </tr>
+    <tr>
+      <td><strong>Curinga</strong></td>
+      <td>Jogador atual escolhe a nova cor vigente.</td>
+      <td>Atributo <code>cor_atual</code> do JogoUno</td>
+    </tr>
+    <tr>
+      <td><strong>+4</strong></td>
+      <td>Próximo compra 4 cartas, perde a vez e o atual escolhe a cor.</td>
+      <td>Pilha + Lista Encadeada + Fila</td>
+    </tr>
+  </table>
+
+  <h3>Reciclagem do monte</h3>
+  <p>
+    Quando a Pilha de compra fica vazia, o método <code>_reciclar_descarte()</code> é chamado:
+  </p>
+
+<pre><code>    <span class="kw">def</span> <span class="fn">_reciclar_descarte</span>(<span class="sf">self</span>):
+        topo = <span class="sf">self</span>.monte_descarte.<span class="fn">retirar</span>()  <span class="cm"># Guarda a carta do topo</span>
+
+        <span class="cm"># Move todas as outras cartas do descarte para o monte</span>
+        <span class="kw">while not</span> <span class="sf">self</span>.monte_descarte.<span class="fn">esta_vazia</span>():
+            <span class="sf">self</span>.monte_compra.<span class="fn">empurrar</span>(<span class="sf">self</span>.monte_descarte.<span class="fn">retirar</span>())
+
+        <span class="sf">self</span>.monte_compra.<span class="fn">embaralhar</span>()        <span class="cm"># Embaralha o novo monte</span>
+        <span class="sf">self</span>.monte_descarte.<span class="fn">empurrar</span>(topo)   <span class="cm"># Devolve o topo ao descarte</span></code></pre>
+</div>
+
+<!-- SEÇÃO 7 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">7</div>
+    <div class="secao-titulo">Mapeamento das Estruturas de Dados no Jogo</div>
+  </div>
+
+  <div class="diagrama">
+  ╔══════════════════════════════════════════════════════════════╗
+  ║                    JOGO UNO — VISÃO GERAL                    ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║                                                              ║
+  ║   PILHA (monte_compra)      PILHA (monte_descarte)           ║
+  ║   ┌─────────────────┐       ┌─────────────────┐             ║
+  ║   │   [Azul 7]  ◄── │topo   │   [Verm. 3] ◄── │topo         ║
+  ║   │   [Verde 2]     │       │   [Azul +2]     │             ║
+  ║   │   [Amarelo 5]   │       │   [Curinga]     │             ║
+  ║   │   [Verm. 9]     │       └─────────────────┘             ║
+  ║   │   ... (100+)    │                                        ║
+  ║   └─────────────────┘                                        ║
+  ║                                                              ║
+  ║   FILA (fila_jogadores)                                      ║
+  ║   ┌──────┬──────┬──────┬──────┐                             ║
+  ║   │ João │ Ana  │Pedro │Maria │  ← entrar() vai aqui        ║
+  ║   └──────┴──────┴──────┴──────┘                             ║
+  ║     ↑ proximo() sai daqui                                    ║
+  ║                                                              ║
+  ║   LISTA ENCADEADA (mão de cada jogador)                      ║
+  ║                                                              ║
+  ║   João:  [Verm.5]→[Azul 3]→[Pular]→None                    ║
+  ║   Ana:   [Verde 2]→[+4]→[Amarelo 1]→[Inverter]→None        ║
+  ║   Pedro: [Curinga]→[Azul 7]→None                            ║
+  ║   Maria: [Amarelo 0]→[Verm.+2]→[Verde 6]→None              ║
+  ║                                                              ║
+  ║   ÁRVORE BINÁRIA DE BUSCA (ranking, chave = nº de cartas)    ║
+  ║   inserindo na ordem da fila: João(3), Ana(4),               ║
+  ║   Pedro(2), Maria(3)                                         ║
+  ║                                                              ║
+  ║                  (3, João)                                   ║
+  ║                 /         \             em ordem:            ║
+  ║          (2, Pedro)     (4, Ana)        Pedro(2) → João(3)   ║
+  ║                        /                → Maria(3) → Ana(4)  ║
+  ║                 (3, Maria)                                   ║
+  ║                                                              ║
+  ╚══════════════════════════════════════════════════════════════╝</div>
+
+  <h3>Por que cada estrutura foi escolhida?</h3>
+
+  <div class="destaque">
+    <h4>Pilha para os montes de cartas</h4>
+    <p>
+      O monte de compra e o de descarte são naturalmente pilhas: você sempre interage com a carta do topo.
+      Quando compra, pega do topo. Quando descarta, coloca no topo. Nunca precisa acessar cartas do meio.
+      A Pilha é perfeita para isso — operações de topo são instantâneas.
+    </p>
+  </div>
+
+  <div class="destaque">
+    <h4>Fila para a ordem dos jogadores</h4>
+    <p>
+      A ordem dos jogadores segue exatamente a lógica FIFO: quem jogou primeiro, vai jogar por último na próxima rodada.
+      Após jogar, o jogador vai para o final da fila. A Fila captura isso perfeitamente.
+      A carta Inverter também é elegante: basta inverter a fila inteira.
+    </p>
+  </div>
+
+  <div class="destaque">
+    <h4>Lista Encadeada para a mão dos jogadores</h4>
+    <p>
+      A mão de um jogador muda constantemente: recebe cartas novas (distribuição, compra) e remove cartas específicas
+      (quando joga). A Lista Encadeada permite remover qualquer carta de qualquer posição de forma eficiente,
+      sem precisar reorganizar toda a estrutura como seria necessário em uma lista comum.
+    </p>
+  </div>
+
+  <div class="destaque">
+    <h4>Árvore Binária de Busca para o ranking</h4>
+    <p>
+      O ranking precisa dos jogadores <strong>ordenados</strong> pela quantidade de cartas. Em vez de
+      ordenar uma lista com <code>sort()</code>, cada jogador é inserido em uma ABB usando a quantidade
+      de cartas como chave — a forma da árvore já guarda a ordem. O percurso em ordem devolve o ranking
+      pronto: quem tem menos cartas primeiro. É o exemplo perfeito de estrutura cuja
+      <strong>organização interna substitui um algoritmo de ordenação</strong>.
+    </p>
+  </div>
+
+  <h3>Complexidade das operações principais</h3>
+
+  <table>
+    <tr><th>Operação</th><th>Estrutura</th><th>Complexidade</th><th>Motivo</th></tr>
+    <tr><td>Comprar carta</td><td>Pilha</td><td>O(1)</td><td>Sempre acessa o topo</td></tr>
+    <tr><td>Descartar carta</td><td>Pilha</td><td>O(1)</td><td>Sempre acessa o topo</td></tr>
+    <tr><td>Próximo jogador</td><td>Fila</td><td>O(1)</td><td>Remove do início do deque</td></tr>
+    <tr><td>Inverter ordem</td><td>Fila</td><td>O(n)</td><td>Percorre todos os jogadores</td></tr>
+    <tr><td>Receber carta na mão</td><td>Lista Encadeada</td><td>O(n)</td><td>Percorre até o último nó</td></tr>
+    <tr><td>Jogar carta (remover)</td><td>Lista Encadeada</td><td>O(n)</td><td>Percorre até a posição</td></tr>
+    <tr><td>Inserir no ranking</td><td>Árvore Binária de Busca</td><td>O(log n) médio · O(n) pior caso</td><td>Desce um nível por comparação (pior caso: árvore "espeto")</td></tr>
+    <tr><td>Ler ranking ordenado</td><td>Árvore Binária de Busca</td><td>O(n)</td><td>Percurso em ordem visita cada nó uma vez</td></tr>
+  </table>
+
+  <div class="box box-info" style="margin-top:30px">
+    <div class="box-titulo">📌 O(1) vs O(n)</div>
+    <p><strong>O(1)</strong> significa que a operação leva o mesmo tempo independente do tamanho da estrutura (ideal). <strong>O(n)</strong> significa que o tempo cresce proporcionalmente ao tamanho — se dobrar os dados, dobra o tempo. Para o UNO com poucos jogadores e poucas cartas, isso não é um problema na prática.</p>
+  </div>
+
+</div>
+
+<!-- SEÇÃO 8 -->
+<div class="secao">
+  <div class="secao-header">
+    <div class="secao-num">8</div>
+    <div class="secao-titulo">Organização do Projeto e os Demais Módulos (visão rápida)</div>
+  </div>
+
+  <p>
+    O foco de estudo deste projeto são as estruturas de dados das seções anteriores. Esta seção é só
+    um mapa rápido do restante do código, para você se localizar.
+  </p>
+
+  <h3>As pastas do projeto</h3>
+
+  <div class="diagrama">  projeto_Uno/
+  ├── uno.py                  ◄ interface de TERMINAL (lê teclado, imprime)
+  ├── servidor.py             ◄ interface WEB (servidor HTTP + API JSON)
+  ├── estruturas/             ◄ ESTRUTURAS DE DADOS (Seções 4 e 5)
+  │   ├── pilha.py
+  │   ├── fila.py
+  │   ├── lista_encadeada.py
+  │   └── arvore.py
+  ├── modelo/                 ◄ REGRAS DO JOGO
+  │   ├── carta.py            (cor, valor e regra de combinação)
+  │   ├── jogador.py          (nome + mão de cartas)
+  │   ├── jogo.py             (motor: turnos, efeitos, ranking)
+  │   └── bot.py              (estratégia dos jogadores-computador)
+  └── frontend/               ◄ VISUAL DO JOGO NO NAVEGADOR
+      ├── index.html
+      ├── style.css
+      └── script.js</div>
+
+  <div class="box box-info">
+    <div class="box-titulo">💡 A ideia central da arquitetura</div>
+    <p>O motor (<code>modelo/jogo.py</code>) contém todas as regras mas <strong>não usa <code>input()</code> nem <code>print()</code></strong>. Assim, o mesmo motor serve as duas interfaces: o terminal conversa com ele por chamadas de método, e o navegador conversa por requisições HTTP. Separar "regras" de "tela" é uma prática clássica de organização de software.</p>
+  </div>
+
+  <h3>modelo/ — as regras do UNO em poucas palavras</h3>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-titulo">Carta (carta.py)</div>
+      <p>Guarda <code>cor</code> e <code>valor</code>. O método <code>pode_jogar_sobre()</code> decide se a jogada é válida: curinga sempre pode; senão, precisa bater a cor ou o valor.</p>
+    </div>
+    <div class="card">
+      <div class="card-titulo">Jogador (jogador.py)</div>
+      <p>Tem um nome, uma flag <code>eh_bot</code> e a mão de cartas — que é uma <strong>Lista Encadeada</strong>. Receber e jogar carta delegam para a lista.</p>
+    </div>
+    <div class="card">
+      <div class="card-titulo">JogoUno (jogo.py)</div>
+      <p>O motor: cria as 108 cartas na <strong>Pilha</strong> de compra, distribui 7 a cada jogador, controla os turnos pela <strong>Fila</strong>, aplica Pular/Inverter/+2/+4 e monta o ranking com a <strong>ABB</strong>.</p>
+    </div>
+    <div class="card">
+      <div class="card-titulo">bot (bot.py)</div>
+      <p>Decide a jogada do computador: joga uma carta comum válida se tiver (guarda curingas para o aperto) e, ao jogar curinga, escolhe a cor que mais tem na mão.</p>
+    </div>
+  </div>
+
+  <h3>servidor.py — o backend web</h3>
+  <p>
+    Usa só a biblioteca padrão do Python (<code>http.server</code>) — não precisa instalar nada.
+    Ele serve os arquivos da pasta <code>frontend/</code> e expõe uma <strong>API JSON</strong> que a
+    página usa para conversar com o motor:
+  </p>
+
+  <table>
+    <tr><th>Rota</th><th>O que faz</th></tr>
+    <tr><td><code>POST /api/novo-jogo</code></td><td>Cria uma partida: você + 1 a 3 bots</td></tr>
+    <tr><td><code>GET /api/estado</code></td><td>Devolve o estado: sua mão, topo do descarte, ranking (ABB), histórico...</td></tr>
+    <tr><td><code>POST /api/jogar</code></td><td>Você joga a carta de um índice (e a cor, se for curinga)</td></tr>
+    <tr><td><code>POST /api/comprar</code></td><td>Você compra 1 carta e passa a vez</td></tr>
+    <tr><td><code>POST /api/bot-jogar</code></td><td>Executa uma jogada do bot da vez (a página chama uma por vez, com pausa)</td></tr>
+  </table>
+
+  <h3>frontend/ — a tela do jogo</h3>
+  <p>
+    HTML, CSS e JavaScript puros, sem frameworks. O <code>script.js</code> chama a API com
+    <code>fetch()</code>, redesenha a mesa a cada resposta e abre um seletor de cores quando você
+    joga um curinga. O painel lateral mostra o <strong>ranking vindo da ABB</strong> e o histórico
+    de jogadas. Importante: <strong>o JavaScript não conhece as regras do UNO</strong> — toda
+    validação acontece no backend Python.
+  </p>
+
+  <h3>Como executar</h3>
+  <table>
+    <tr><th>Versão</th><th>Comando</th><th>Como joga</th></tr>
+    <tr><td><strong>Web</strong></td><td><code>python servidor.py</code></td><td>Abra <code>http://localhost:8000</code> — você contra 1 a 3 bots</td></tr>
+    <tr><td><strong>Terminal</strong></td><td><code>python uno.py</code></td><td>2 a 4 jogadores revezando o teclado</td></tr>
+  </table>
+
+  <div style="margin-top: 50px; text-align: center; padding: 30px; background: #f8f8f8; border-radius: 12px; color: #666; font-size: 13px;">
+    <p style="font-size: 20px; margin-bottom: 10px;">🃏</p>
+    <p><strong>Documentação do Jogo UNO em Python</strong></p>
+    <p>Estruturas de Dados: Pilha · Fila · Lista Encadeada · Árvore Binária de Busca</p>
+    <p style="margin-top: 10px; color: #999;">Para imprimir como PDF: Ctrl+P → Salvar como PDF → Layout: Vertical</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNO - Estruturas de Dados</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ TELA INICIAL ============ -->
+  <div id="tela-inicial" class="tela">
+    <div class="painel-inicio">
+      <h1 class="logo">UNO</h1>
+      <p class="subtitulo">Pilha &bull; Fila &bull; Lista Encadeada &bull; Árvore Binária de Busca</p>
+
+      <label for="campo-nome">Seu nome</label>
+      <input id="campo-nome" type="text" maxlength="15" placeholder="Digite seu nome" value="">
+
+      <label>Quantidade de bots</label>
+      <div class="opcoes-bots">
+        <button class="botao-bot" data-bots="1">1 bot</button>
+        <button class="botao-bot selecionado" data-bots="2">2 bots</button>
+        <button class="botao-bot" data-bots="3">3 bots</button>
+      </div>
+
+      <button id="botao-iniciar" class="botao-principal">Começar jogo</button>
+    </div>
+  </div>
+
+  <!-- ============ MESA DE JOGO ============ -->
+  <div id="tela-jogo" class="tela escondida">
+
+    <div class="mesa">
+      <!-- Oponentes (bots) -->
+      <div class="label-turno">
+        <span>Ordem dos turnos</span>
+        <button class="btn-info" data-info="fila">?</button>
+      </div>
+      <div id="area-oponentes" class="area-oponentes"></div>
+
+      <!-- Centro: monte de compra + descarte -->
+      <div class="area-central">
+        <div class="monte">
+          <div id="monte-compra" class="carta verso" title="Comprar carta">
+            <span class="logo-verso">UNO</span>
+          </div>
+          <span id="contador-monte" class="legenda-monte">0 cartas</span>
+          <button class="btn-info" data-info="pilha-compra">?</button>
+        </div>
+
+        <div class="monte">
+          <div id="carta-topo" class="carta"></div>
+          <span class="legenda-monte">Descarte</span>
+          <button class="btn-info" data-info="pilha-descarte">?</button>
+        </div>
+
+        <div class="indicador-cor">
+          <span>Cor atual</span>
+          <div id="bolinha-cor" class="bolinha"></div>
+        </div>
+      </div>
+
+      <div id="aviso-vez" class="aviso-vez"></div>
+
+      <!-- Mão do jogador humano -->
+      <div class="area-jogador">
+        <div class="jogador-header">
+          <div id="nome-jogador" class="nome-jogador"></div>
+          <button class="btn-info" data-info="lista">?</button>
+        </div>
+        <div id="mao-jogador" class="mao"></div>
+      </div>
+    </div>
+
+    <!-- Painel lateral: ranking (ABB) + histórico -->
+    <aside class="painel-lateral">
+      <section class="caixa">
+        <div class="caixa-titulo">
+          <h2>🏆 Ranking</h2>
+          <button class="btn-info" data-info="abb">?</button>
+        </div>
+        <p class="explicacao">Ordenado por uma Árvore Binária de Busca (percurso em ordem)</p>
+        <ol id="lista-ranking"></ol>
+      </section>
+      <section class="caixa caixa-log">
+        <h2>📜 Histórico</h2>
+        <ul id="lista-log"></ul>
+      </section>
+      <button id="botao-reiniciar" class="botao-secundario">Novo jogo</button>
+    </aside>
+  </div>
+
+  <!-- ============ MODAL: INFO ESTRUTURA ============ -->
+  <div id="modal-info" class="fundo-modal escondida">
+    <div class="modal modal-info">
+      <div id="info-header" class="info-header">
+        <span id="info-icone" class="info-icone"></span>
+        <div class="info-header-textos">
+          <span id="info-tag" class="tag-estrutura"></span>
+          <h2 id="info-titulo"></h2>
+        </div>
+      </div>
+      <div class="info-body">
+        <p id="info-texto" class="info-texto"></p>
+        <div class="info-metodos">
+          <div class="info-metodos-titulo">Métodos usados no jogo</div>
+          <div id="info-metodos-lista"></div>
+        </div>
+        <button id="info-fechar" class="botao-principal botao-fechar-info">Entendido ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: ESCOLHER COR DO CURINGA ============ -->
+  <div id="modal-cor" class="fundo-modal escondida">
+    <div class="modal">
+      <h2>Escolha uma cor</h2>
+      <div class="opcoes-cor">
+        <button class="opcao-cor vermelho" data-cor="Vermelho"></button>
+        <button class="opcao-cor azul" data-cor="Azul"></button>
+        <button class="opcao-cor verde" data-cor="Verde"></button>
+        <button class="opcao-cor amarelo" data-cor="Amarelo"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: FIM DE JOGO ============ -->
+  <div id="modal-fim" class="fundo-modal escondida">
+    <div class="modal">
+      <h2 id="titulo-fim"></h2>
+      <p id="mensagem-fim"></p>
+      <button id="botao-jogar-novamente" class="botao-principal">Jogar novamente</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
