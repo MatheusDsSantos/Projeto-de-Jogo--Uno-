@@ -25,7 +25,7 @@ from modelo.jogo import JogoUno
 
 PORTA = 8000
 PASTA_FRONTEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
-NOMES_BOTS = ["Bot Prof me da 10 pfv", "Bot Gabriel speck", "Bot Matheus"]
+NOMES_BOTS = ["Prof me da 10 pfv", "Ou Santo será rebaixado", "Bot Matheus"]
 
 # Uma unica partida em memoria (suficiente para a demonstracao)
 jogo = None
