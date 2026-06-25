@@ -25,7 +25,7 @@ from modelo.jogo import JogoUno
 
 PORTA = 8000
 PASTA_FRONTEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
-NOMES_BOTS = ["Prof me da 10 pfv", "Ou Santo será rebaixado", "Bot Matheus"]
+NOMES_BOTS = ["Prof me da 10 pfv", "Ou Santos será rebaixado", "Neymar"]
 
 # Uma unica partida em memoria (suficiente para a demonstracao)
 jogo = None
@@ -126,6 +126,12 @@ class ServidorUno(SimpleHTTPRequestHandler):
 
     def log_message(self, formato, *args):
         pass  # Silencia o log de cada requisicao no terminal
+
+    def end_headers(self):
+        # Evita que o navegador use versao em cache do script.js/style.css
+        # durante o desenvolvimento (sempre pega a versao mais nova).
+        self.send_header("Cache-Control", "no-store, must-revalidate")
+        super().end_headers()
 
     def _responder_json(self, dados, status=200):
         corpo = json.dumps(dados, ensure_ascii=False).encode("utf-8")

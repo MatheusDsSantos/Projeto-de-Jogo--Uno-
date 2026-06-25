@@ -55,6 +55,14 @@ const SIMBOLOS = {
   Curinga: "W",
 };
 
+// Foto de cada bot (mapeada pelo NOME definido em servidor.py -> NOMES_BOTS).
+// Usamos o nome e nao a posicao porque a fila de turnos muda a ordem na tela.
+const FOTOS_BOTS = {
+  "Prof me da 10 pfv": "img/santos.png",      // bot 1 - escudo do Santos FC
+  "Ou Santos será rebaixado": "img/santos.png", // bot 2 - escudo do Santos FC
+  "Neymar": "img/neymar.jpg",                  // bot 3 - foto do Neymar
+};
+
 // ---------- Comunicacao com o backend ----------
 
 async function chamarApi(rota, corpo) {
@@ -104,8 +112,12 @@ function renderizar(estado) {
         { length: Math.min(j.cartas, 10) },
         () => '<div class="mini-carta"></div>'
       ).join("");
+      const foto = FOTOS_BOTS[j.nome];
+      const avatar = foto
+        ? `<div class="avatar"><img src="${foto}" alt="${j.nome}"></div>`
+        : `<div class="avatar">🤖</div>`;
       div.innerHTML = `
-        <div class="avatar">🤖</div>
+        ${avatar}
         <div class="nome">${j.nome}</div>
         <div class="mini-cartas">${miniCartas}</div>
         <div class="contagem">${j.cartas} carta(s)</div>
