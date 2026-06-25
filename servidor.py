@@ -25,7 +25,7 @@ from modelo.jogo import JogoUno
 
 PORTA = 8000
 PASTA_FRONTEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
-NOMES_BOTS = ["Bot Ana", "Bot Beto", "Bot Caio"]
+NOMES_BOTS = ["Bot Prof me da 10 pfv", "Bot Gabriel speck", "Bot Matheus"]
 
 # Uma unica partida em memoria (suficiente para a demonstracao)
 jogo = None
@@ -149,6 +149,7 @@ class ServidorUno(SimpleHTTPRequestHandler):
             # Qualquer outro caminho: serve os arquivos de frontend/
             super().do_GET()
 
+###chama as funçoes aqui dependendo da rota requisitada
     def do_POST(self):
         try:
             dados = self._ler_corpo_json()

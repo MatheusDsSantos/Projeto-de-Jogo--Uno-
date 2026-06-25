@@ -2,10 +2,6 @@
 
 ## Linguagem
 
-- Todo identificador (classe, método, variável, arquivo) é nomeado em **português**: `Pilha`, `empurrar`, `monte_compra`, `jogador_da_vez`.
-- Mensagens de log e de erro também são em português, voltadas para quem está jogando: `"Numero de carta invalido."`, `"{nome} jogou {carta}"`.
-- Apenas nomes técnicos amplamente conhecidos em inglês são mantidos como estão: `Pilha`/`Fila` em si são em português, mas os conceitos LIFO/FIFO aparecem nos comentários para reforçar o vocabulário acadêmico.
-
 ## Nomenclatura
 
 | Elemento | Convenção | Exemplo |
