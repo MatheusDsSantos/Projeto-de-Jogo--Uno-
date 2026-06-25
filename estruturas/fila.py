@@ -2,12 +2,16 @@
 FILA (Queue) - usada para controlar a ordem dos turnos dos jogadores.
 Funciona como FIFO: primeiro a entrar, primeiro a sair.
 """
+# deque = "double-ended queue": tipo uma lista, mas otimizada pra
+# inserir/remover nos dois extremos em O(1). Usada aqui porque a Fila
+# remove sempre do início (popleft), o que numa list normal seria O(n).
+
 
 from collections import deque
 
 
 class Fila:
-    """Fila (Queue) - funciona como FIFO: primeiro a entrar, primeiro a sair."""
+    """Fila funciona como FIFO: primeiro a entrar, primeiro a sair."""
 
     def __init__(self):
         self._jogadores = deque()

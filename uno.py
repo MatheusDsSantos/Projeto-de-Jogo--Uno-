@@ -1,16 +1,12 @@
 """
 Jogo UNO em Python - INTERFACE DE TERMINAL
 
-Toda a logica do jogo fica em modelo/jogo.py (o motor). Este arquivo
-apenas conversa com o usuario pelo teclado.
 
 Estruturas de dados usadas no projeto:
 - Pilha (estruturas/pilha.py): montes de compra e descarte
 - Fila (estruturas/fila.py): ordem dos turnos
 - Lista Encadeada (estruturas/lista_encadeada.py): mao de cada jogador
 - Arvore Binaria de Busca (estruturas/arvore.py): ranking dos jogadores
-
-Para jogar no navegador, execute: python servidor.py
 """
 
 from modelo.jogo import JogoUno
@@ -31,7 +27,7 @@ def perguntar_quantidade_jogadores():
 def perguntar_nomes(quantidade):
     nomes = []
     for i in range(quantidade):
-        nome = input(f"Nome do jogador {i + 1}: ").strip()
+        nome = input(f"Nome do jogador {i + 1}: ").strip()##remove espaço em branco
         if not nome:
             nome = f"Jogador {i + 1}"
         nomes.append(nome)

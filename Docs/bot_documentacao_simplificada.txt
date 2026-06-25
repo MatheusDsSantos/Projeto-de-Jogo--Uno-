@@ -1,0 +1,39 @@
+Documentação dos Bots — Comportamento Atual
+=========================================
+
+Objetivo:
+- Descrever exatamente o comportamento implementado atualmente pelo bot.
+
+Implementação atual (arquivo):
+- Veja a implementação em `modelo/bot.py` — função `escolher_jogada(jogo, jogador)`.
+
+Resumo do algoritmo:
+- Obtém `indices_validos = jogo.cartas_validas(jogador)` com as posições jogáveis.
+- Se `indices_validos` estiver vazio, o bot retorna `(None, None)` indicando que deve
+  comprar carta.
+- Entre as cartas válidas, o bot prefere cartas não‑curinga (filtra onde `carta.cor != "Curinga"
+  `) e, se houver, escolhe aleatoriamente uma dessas.
+- Se não houver cartas não‑curinga válidas, escolhe aleatoriamente entre todas as cartas válidas.
+- Se a carta escolhida for um curinga, o bot determina a cor com `_cor_mais_frequente(cartas)`:
+  conta as cores segundo `JogoUno.CORES` e retorna a cor com maior ocorrência; se não houver
+  nenhuma cor predominante, escolhe uma cor aleatoriamente.
+
+Comportamento determinístico vs aleatório:
+- O bot usa `random.choice` para desempate entre opções válidas, portanto seu comportamento
+  contém aleatoriedade na seleção entre várias jogadas igualmente preferidas.
+
+Interfaces e retornos:
+- A função retornada é uma tupla `(indice, cor_escolhida)` onde `indice` é a posição da
+  carta na mão a ser jogada (ou `None` para comprar) e `cor_escolhida` é usada apenas para
+  curingas (ou `None` caso contrário).
+
+Observações:
+- Não há heurísticas avançadas implementadas (por exemplo, priorizar forçar compra de
+  adversários, avaliar probabilidade ou contar cartas). O comportamento atual é simples
+  e adotado intencionalmente no código.
+
+Referências:
+- Implementação: [modelo/bot.py](modelo/bot.py#L1-L200)
+
+Autor: Equipe do Projeto UNO
+Data: 2026-06-25

@@ -1,16 +1,4 @@
-"""
-ARVORE BINARIA DE BUSCA (ABB) - usada para montar o RANKING dos jogadores.
 
-Cada no guarda uma chave (quantidade de cartas na mao) e um valor (nome do
-jogador). A propriedade da ABB garante que:
-
-  - tudo que esta na subarvore ESQUERDA tem chave MENOR
-  - tudo que esta na subarvore DIREITA tem chave MAIOR OU IGUAL
-
-Assim, ao percorrer a arvore EM ORDEM (esquerda -> raiz -> direita),
-obtemos os jogadores ordenados do que tem MENOS cartas (esta ganhando)
-para o que tem MAIS cartas (esta perdendo), sem precisar de sort().
-"""
 
 
 class NoArvore:
@@ -53,10 +41,7 @@ class ArvoreBinariaBusca:
                 atual = atual.direita
 
     def em_ordem(self):
-        """
-        Percurso EM ORDEM (in-order): esquerda -> raiz -> direita.
-        Retorna uma lista de tuplas (chave, valor) em ordem crescente de chave.
-        """
+    
         resultado = []
         self._em_ordem_recursivo(self.raiz, resultado)
         return resultado

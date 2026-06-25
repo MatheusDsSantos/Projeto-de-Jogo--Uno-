@@ -1,16 +1,10 @@
 """
 SERVIDOR WEB do jogo UNO.
 
-Usa apenas a biblioteca padrao do Python (http.server) - nao precisa
-instalar nada. O servidor:
-
 1. Serve os arquivos da pasta frontend/ (a interface do jogo)
 2. Expoe uma API JSON que a interface usa para conversar com o motor
    do jogo (modelo/jogo.py)
 
-Como rodar:
-    python servidor.py
-    Depois abra http://localhost:8000 no navegador.
 
 Rotas da API:
     POST /api/novo-jogo   {"nome": "Matheus", "bots": 2}
